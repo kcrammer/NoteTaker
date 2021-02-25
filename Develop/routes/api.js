@@ -1,14 +1,27 @@
+const router = require("express").Router();
+const { v4: uuidv4 } = require("uuid");
+const path = require("path");
+const fs = require("fs");
 
-const router=require("express").Router()
-const db=require("../db/db.json")
+let DB = require(""../db/db.json");
 
-router.get("/api/notes",function(req,res){
-     res.json(db)
-})
+router.get("/api/notes", (req, res) => {
+    res.json(DB);
+});
 
-router.post("/api/notes",function(req,res){
-    db.push(req.body)
-    res.json(db)
-})
+router.post("/api/notes", (req, res) => {
+    req.body.id = uuidv4();
+    DB.push(req.body);
+    fs.writeFileSync("./db/db.json", JSON.stringify(DB));
+    res.json(DB);
+    
+});
 
-module.exports=router
+router.delete("/api/notes/:id", (req, res) => {
+    const id = req.params.id;
+    DB = DB.filter(note => note.id != id);
+    fs.writeFileSync("./db/db.json", JSON.stringify(DB));
+    res.json(DB);
+});
+
+module.exports = router;
