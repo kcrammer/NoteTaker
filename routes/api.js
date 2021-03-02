@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 const path = require("path");
 const fs = require("fs");
 
-let DB = require(""../db/db.json");
+let DB = require("../db/db.json");
 
 router.get("/api/notes", (req, res) => {
     res.json(DB);
